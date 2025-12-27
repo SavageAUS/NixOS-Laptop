@@ -17,8 +17,8 @@
     programs.git = {
         enable = true;
         settings = {
-            user.name = "Shane Scott";
-            user.email = "shane.r.scott1981@gmil.com";
+            user.name = "XXXXXXXXXXXXXXXXXXXXXXXX";
+            user.email = "XXXXXXXXXXXXXXXXXXXXXXXXX";
         };
     };
     programs.alacritty = {
