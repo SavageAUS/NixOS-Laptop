@@ -11,8 +11,15 @@
         name = "Bibata-Modern-Classic";
         size = 24;
     };
+    home.packages = with pkgs; [
+        
+        ];
     programs.git = {
         enable = true;
+        settings = {
+            user.name = "Shane Scott";
+            user.email = "shane.r.scott1981@gmil.com";
+        };
     };
     programs.alacritty = {
         enable = true;
@@ -31,4 +38,12 @@
             btw = "echo i use nixos btw";
         };
     };
+    programs.zsh = {
+        enable = true;
+    };
+
+#    home.file.".p10k.zsh" = {
+#        source = ./.p10k.zsh;
+#        executable = true;
+#    };
 }
