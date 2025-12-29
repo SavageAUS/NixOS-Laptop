@@ -22,6 +22,11 @@
 
   services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
 
+  hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+  };
+
   hardware.nvidia = {
       modesetting.enable = true;
       powerManagement.enable = false;
@@ -71,8 +76,9 @@
         firefox = {
             enable = true;
         };
-        steam = {
+        localsend = {
             enable = true;
+            openFirewall = true;
         };
         zsh = {
             enable = true;
@@ -102,7 +108,7 @@
   users.users.shane = {
       isNormalUser = true;
       description = "Shane Scott";
-      extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
+      extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" "docker" ];
       packages = with pkgs; [
       
     ];
@@ -134,6 +140,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
+    neovim
     wget
     git
     udiskie
@@ -143,6 +150,8 @@
     lshw
     jq
     bibata-cursors
+    adwaita-icon-theme
+    papirus-icon-theme
     gparted
     oh-my-zsh
     gimp
@@ -156,6 +165,7 @@
     tree-sitter
     cava
     vlc
+    quickshell
     mesa-demos
     flatpak
     virt-manager
@@ -163,6 +173,10 @@
     qemu
     dnsmasq
     obs-studio
+    jellyfin-tui
+    jellyfin-media-player
+    vscode-fhs
+    localsend
 
 
     #Hyprland
@@ -170,10 +184,13 @@
     wofi
     waypaper
     swww
+    xdg-desktop-portal-hyprland
     hypridle
     hyprlock
     hyprcursor
     hyprpolkitagent
+    grim
+    slurp
     hyprviz
     cliphist
     wl-clipboard
@@ -181,6 +198,10 @@
     swaynotificationcenter
     swayosd
     wlogout
+    
+
+    #Niri
+    fuzzel
 
     #Kde Applications
     kdePackages.dolphin
@@ -192,6 +213,11 @@
     kdePackages.kservice
     kdePackages.breeze
     kdePackages.ark
+    qt6.qtbase
+    qt6.qtdeclarative
+    qt6.qtwayland
+    qt6.qt5compat
+    qt6.qtmultimedia
 
 
     #Unfree Software
