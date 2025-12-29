@@ -91,6 +91,9 @@
         virt-manager = {
             enable = true;
         };
+        thunar = {
+            enable = true;
+        };
     };
 
     virtualisation.libvirtd = {
@@ -203,10 +206,16 @@
     #Niri
     fuzzel
 
+    #XFCE
+    xfce.thunar
+
     #Kde Applications
     kdePackages.dolphin
+    kdePackages.qt6ct
     kdePackages.kate
     kdePackages.qtsvg
+    kdePackages.ffmpegthumbs
+    kdePackages.kdegraphics-thumbnailers
     kdePackages.kio
     kdePackages.kio-fuse
     kdePackages.kio-extras
