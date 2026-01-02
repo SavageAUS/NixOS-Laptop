@@ -122,12 +122,10 @@
       enable = true;
       };
 
-
   virtualisation.libvirtd = {
       enable = true;
       qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
       };
-
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.shane = {
@@ -172,6 +170,7 @@
     dnsmasq
     quickshell
     mesa-demos
+    fastfetch
     putty
     adwaita-icon-theme
     papirus-icon-theme
@@ -187,6 +186,7 @@
     xdg-desktop-portal-hyprland
     hypridle
     hyprlock
+    hyprshot
     hyprpolkitagent
     grim
     slurp
@@ -201,26 +201,33 @@
     #Gnome
     nautilus
     polkit_gnome
+    gnome-notes
+    gnome-music
+    gnome-photos
+    gnome-text-editor
+    gnome-screenshot
+    loupe
+
 
     #Kde Applications
-    kdePackages.dolphin
-    kdePackages.dolphin-plugins
-    kdePackages.polkit-kde-agent-1
-    kdePackages.qt6ct
-    kdePackages.kate
-    kdePackages.qtsvg
-    kdePackages.ffmpegthumbs
-    kdePackages.kdegraphics-thumbnailers
-    kdePackages.kio
-    kdePackages.kio-fuse
-    kdePackages.kio-extras
-    kdePackages.kservice
-    kdePackages.ark
-    qt6.qtbase
-    qt6.qtdeclarative
-    qt6.qtwayland
-    qt6.qt5compat
-    qt6.qtmultimedia
+#    kdePackages.dolphin
+#    kdePackages.dolphin-plugins
+#    kdePackages.polkit-kde-agent-1
+#    kdePackages.qt6ct
+#    kdePackages.kate
+#    kdePackages.qtsvg
+#    kdePackages.ffmpegthumbs
+#    kdePackages.kdegraphics-thumbnailers
+#    kdePackages.kio
+#    kdePackages.kio-fuse
+#    kdePackages.kio-extras
+#    kdePackages.kservice
+#    kdePackages.ark
+#    qt6.qtbase
+#    qt6.qtdeclarative
+#    qt6.qtwayland
+#    qt6.qt5compat
+#    qt6.qtmultimedia
 
     #Nonfree
     microsoft-edge
