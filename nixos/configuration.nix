@@ -2,7 +2,7 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
     ];
 
@@ -13,36 +13,9 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "nixos-laptop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  hardware.graphics = {
-      enable = true;
-      enable32Bit = true;
-  };
 
-  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
-
-  hardware.bluetooth = {
-      enable = true;
-      powerOnBoot = true;
-  };
-
-  hardware.nvidia = {
-      modesetting.enable = true;
-      powerManagement.enable = false;
-      powerManagement.finegrained = false;
-      open = false;
-      nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      prime = {
-          offload = {
-              enable = true;
-              enableOffloadCmd = true;
-          };
-          intelBusId = "PCI:0:2:0";
-          nvidiaBusId = "PCI:1:0:0";
-      };
-  };
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -68,119 +41,143 @@
     LC_TIME = "en_AU.UTF-8";
   };
 
-    programs = {
-        hyprland = {
-	        enable = true;
-	        xwayland.enable = true;
-	        };
-        firefox = {
-            enable = true;
-        };
-        localsend = {
-            enable = true;
-            openFirewall = true;
-        };
-        zsh = {
-            enable = true;
-            ohMyZsh = {
-                enable = true;
-                theme = "agnoster";
-                plugins = [ "git" "sudo" ];
-            };
-        };
-        virt-manager = {
-            enable = true;
-        };
-        thunar = {
-            enable = true;
-        };
-    };
-
-    virtualisation.libvirtd = {
-        enable = true;
-        qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
-    };
+  systemd.user.services.polkit-gnome-authentication-agent-1 = {
+  description = "polkit-gnome-authentication-agent-1";
+  wantedBy = [ "graphical-session.target" ];
+  wants = [ "graphical-session.target" ];
+  after = [ "graphical-session.target" ];
+  serviceConfig = {
+    Type = "simple";
+    ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+    Restart = "on-failure";
+    RestartSec = 1;
+    TimeoutStopSec = 10;
+  };
+};
 
   # Configure keymap in X11
   services.xserver.xkb = {
-    layout = "en-us";
+    layout = "au";
     variant = "";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.shane = {
-      isNormalUser = true;
-      description = "Shane Scott";
-      extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" "docker" ];
-      packages = with pkgs; [
-      
-    ];
+  hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
   };
-  users.users.shane.shell = pkgs.zsh;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-  security.polkit.enable = true;
+  services.upower.enable = true;
   
+  services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
+
+  hardware.nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      prime = {
+          offload = {
+              enable = true;
+              enableOffloadCmd = true;
+          };
+          intelBusId = "PCI:0:2:0";
+          nvidiaBusId = "PCI:1:0:0";
+      };
+  };
+
+  programs = {
+      hyprland = {
+          enable = true;
+          xwayland.enable = true;
+      };
+      firefox = {
+          enable = true;
+      };
+      localsend = {
+          enable = true;
+          openFirewall = true;
+      };
+      virt-manager = {
+          enable = true;
+      };
+  };
 
   services.flatpak = {
       enable = true;
-  };
+      };
   xdg.portal = {
       enable = true;
-  };
+      };
   services.udisks2 = {
       enable = true;
-  };
+      };
   services.gvfs = {
       enable = true;
-  };
+      };
   services.displayManager.ly = {
       enable = true;
+      };
+  services.power-profiles-daemon = {
+      enable = true;
+      };
+
+
+  virtualisation.libvirtd = {
+      enable = true;
+      qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
+      };
+
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.shane = {
+    isNormalUser = true;
+    description = "Shane Scott";
+    extraGroups = [ "networkmanager" "wheel" "input" ];
+    packages = with pkgs; [
+#	kitty
+    ];
   };
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  security.polkit.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim
-    neovim
     wget
-    git
     udiskie
+    gptfdisk
     brightnessctl
     playerctl
+    pavucontrol
     pciutils
     lshw
     jq
-    bibata-cursors
-    adwaita-icon-theme
-    papirus-icon-theme
     gparted
-    oh-my-zsh
     gimp
     networkmanager
     networkmanagerapplet
+    power-profiles-daemon
     blueman
     cmatrix
     btop
     xdg-user-dirs
     gcc
-    tree-sitter
     cava
     vlc
+    dnsmasq
     quickshell
     mesa-demos
-    flatpak
-    virt-manager
-    libvirt
-    qemu
-    dnsmasq
+    putty
+    adwaita-icon-theme
+    papirus-icon-theme
     obs-studio
+    davinci-resolve
     jellyfin-tui
-    jellyfin-media-player
-    vscode-fhs
-    localsend
-
 
     #Hyprland
     waybar
@@ -190,27 +187,25 @@
     xdg-desktop-portal-hyprland
     hypridle
     hyprlock
-    hyprcursor
     hyprpolkitagent
     grim
     slurp
-    hyprviz
     cliphist
     wl-clipboard
     wl-clip-persist
     swaynotificationcenter
     swayosd
     wlogout
-    
+    noctalia-shell
 
-    #Niri
-    fuzzel
-
-    #XFCE
-    xfce.thunar
+    #Gnome
+    nautilus
+    polkit_gnome
 
     #Kde Applications
     kdePackages.dolphin
+    kdePackages.dolphin-plugins
+    kdePackages.polkit-kde-agent-1
     kdePackages.qt6ct
     kdePackages.kate
     kdePackages.qtsvg
@@ -220,7 +215,6 @@
     kdePackages.kio-fuse
     kdePackages.kio-extras
     kdePackages.kservice
-    kdePackages.breeze
     kdePackages.ark
     qt6.qtbase
     qt6.qtdeclarative
@@ -228,17 +222,16 @@
     qt6.qt5compat
     qt6.qtmultimedia
 
-
-    #Unfree Software
-    discord
+    #Nonfree
     microsoft-edge
-    ];
+    discord
+  ];
 
-    fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.meslo-lg
-    font-awesome
-    ];
+  fonts.packages = with pkgs; [
+  nerd-fonts.jetbrains-mono
+  nerd-fonts.meslo-lg
+  font-awesome
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
