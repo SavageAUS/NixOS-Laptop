@@ -13,32 +13,31 @@
         size = 24;
     };
     home.packages = with pkgs; [
+    davinci-resolve
         
         ];
     programs.git = {
         enable = true;
         settings = {
             user.name = "Shane Scott";
-            user.email = "shane.r.scott1981@gmil.com";
+            user.email = "shane.r.scott1981@gmail.com";
         };
-    };
-    programs.alacritty = {
-        enable = true;
     };
     programs.kitty = {
         enable = true;
         settings = {
             background_opacity = 0.8;
-            dynamic_background_opacity = true;
         };
     };
     programs.bash = {
         enable = true;
-        shellAliases = {
-            btw = "echo i use nixos btw";
-        };
     };
-    programs.zsh = {
+    programs.fish = {
         enable = true;
+        interactiveShellInit = ''
+        if status is-interactive
+        fastfetch
+        end
+        '';
     };
 }

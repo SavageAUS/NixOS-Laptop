@@ -2,7 +2,7 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [ 
       ./hardware-configuration.nix
     ];
 
@@ -43,6 +43,21 @@
           nvidiaBusId = "PCI:1:0:0";
       };
   };
+
+
+  systemd.user.services.hyprpolkitagent = {
+      description = "hyprpolkitagent";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+      };
+  };
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -73,6 +88,18 @@
 	        enable = true;
 	        xwayland.enable = true;
 	        };
+        dms-shell = {
+            enable = true;
+            systemd = {
+                enable = true;
+                restartIfChanged = true;
+            };
+            enableSystemMonitoring = true;     # System monitoring widgets (dgop)
+            enableVPN = false;                  # VPN management widget
+            enableDynamicTheming = true;       # Wallpaper-based theming (matugen)
+            enableAudioWavelength = true;      # Audio visualizer (cava)
+            enableCalendarEvents = true;       # Calendar integration (khal)
+        };
         firefox = {
             enable = true;
         };
@@ -80,21 +107,11 @@
             enable = true;
             openFirewall = true;
         };
-        zsh = {
-            enable = true;
-            ohMyZsh = {
-                enable = true;
-                theme = "agnoster";
-                plugins = [ "git" "sudo" ];
-            };
-        };
-        virt-manager = {
-            enable = true;
-        };
-        thunar = {
+        fish = {
             enable = true;
         };
     };
+    documentation.man.generateCaches = false;
 
     virtualisation.libvirtd = {
         enable = true;
@@ -111,16 +128,19 @@
   users.users.shane = {
       isNormalUser = true;
       description = "Shane Scott";
+      shell = pkgs.fish;
       extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" "docker" ];
       packages = with pkgs; [
       
     ];
   };
-  users.users.shane.shell = pkgs.zsh;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   security.polkit.enable = true;
+
+  xdg.menus.enable = true;
+  xdg.mime.enable = true;
   
 
   services.flatpak = {
@@ -142,91 +162,98 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim
-    neovim
-    wget
-    git
-    udiskie
-    brightnessctl
-    playerctl
-    pciutils
-    lshw
-    jq
-    bibata-cursors
     adwaita-icon-theme
-    papirus-icon-theme
-    gparted
-    oh-my-zsh
+    bibata-cursors
+    blueman
+    brightnessctl
+    btop
+    cava
+    cmatrix
+    davinci-resolve
+    dnsmasq
+    fastfetch
+    ffmpeg
+    flatpak
+    gcc
     gimp
+    git
+    jellyfin-media-player
+    jellyfin-tui
+    jq
+    libvirt
+    localsend
+    lshw
+    mesa-demos
+    mesa.opencl
+    neovim
     networkmanager
     networkmanagerapplet
-    blueman
-    cmatrix
-    btop
-    xdg-user-dirs
-    gcc
-    tree-sitter
-    cava
-    vlc
-    quickshell
-    mesa-demos
-    flatpak
-    virt-manager
-    libvirt
-    qemu
-    dnsmasq
     obs-studio
-    jellyfin-tui
-    jellyfin-media-player
-    vscode-fhs
-    localsend
-
+    papirus-icon-theme
+    pciutils
+    playerctl
+    putty
+    qemu
+    quickshell
+    tree-sitter
+    udiskie
+    vesktop
+    vim
+    vlc
+    wget
+    xdg-user-dirs
 
     #Hyprland
-    waybar
-    wofi
-    waypaper
-    swww
-    xdg-desktop-portal-hyprland
+    cliphist
+    grim
+    hyprcursor
     hypridle
     hyprlock
-    hyprcursor
     hyprpolkitagent
-    grim
-    slurp
     hyprviz
-    cliphist
-    wl-clipboard
-    wl-clip-persist
+    rofi
+    slurp
     swaynotificationcenter
     swayosd
+    swww
+    waybar
+    waypaper
+    wl-clip-persist
+    wl-clipboard
     wlogout
+    xdg-desktop-portal-hyprland
+
+    #Gnome Packages
+    file-roller
+    gnome-boxes
+    gnome-photos
+    gnome-text-editor
+    gparted
+    nautilus
     
-
-    #Niri
-    fuzzel
-
-    #XFCE
-    xfce.thunar
-
     #Kde Applications
-    kdePackages.dolphin
-    kdePackages.qt6ct
-    kdePackages.kate
-    kdePackages.qtsvg
-    kdePackages.ffmpegthumbs
-    kdePackages.kdegraphics-thumbnailers
-    kdePackages.kio
-    kdePackages.kio-fuse
-    kdePackages.kio-extras
-    kdePackages.kservice
-    kdePackages.breeze
-    kdePackages.ark
-    qt6.qtbase
-    qt6.qtdeclarative
-    qt6.qtwayland
-    qt6.qt5compat
-    qt6.qtmultimedia
+    #kdePackages.ark
+    #kdePackages.breeze
+    #kdePackages.dolphin
+    #kdePackages.dolphin-plugins
+    #kdePackages.ffmpegthumbs
+    #kdePackages.kate
+    #kdePackages.kdegraphics-thumbnailers
+    #kdePackages.kio
+    #kdePackages.kio-admin
+    #kdePackages.kio-extras
+    #kdePackages.kio-fuse
+    #kdePackages.plasma-integration
+    #kdePackages.kservice
+    #kdePackages.plasma-workspace
+    #kdePackages.qt6ct
+    #kdePackages.qtsvg
+    #qt6.qt5compat
+    #qt6.qtbase
+    #qt6.qtdeclarative
+    #qt6.qtmultimedia
+    #qt6.qtwayland
+    #shared-mime-info
 
 
     #Unfree Software
@@ -240,6 +267,9 @@
     font-awesome
     ];
 
+    # This fixes the unpopulated MIME menus
+    environment.etc."/xdg/menus/plasma-applications.menu".text = builtins.readFile "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -251,7 +281,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
